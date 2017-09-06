@@ -39,27 +39,21 @@ public class HelloWorldResource {
                     "</div>";
         }
         //Gestion de l'enregistrement 0 afin d'afficher ou non le menu déroulant.
+        taskhtml += "<form action='/hello-world' " +
+                "method='POST'>Add Task: <input type='text' name='taskTitle'>" +
+                "<br />Add Date Task : <input type='date' name='date'> " +
+                "<br />Task Father :" +
+                "<SELECT name='Parents' size='1'>\n" +
+                "<OPTION> Aucun";
         if (Taches.size() > 0) {
-            taskhtml += "<form action='/hello-world' " +
-                    "method='POST'>Add Task: <input type='text' name='taskTitle'>" +
-                    "<br />Add Date Task : <input type='date' name='date'> " +
-                    "<br />Task Father :" +
-                    "<SELECT name='Parents' size='1'>\n" +
-                    "<OPTION> Aucun";
             for (int i = 0; i < Taches.size(); i++) {
                 taskhtml += "<OPTION>" + Taches.elementAt(i).Nom;
             }
-            taskhtml += "</SELECT>" +
-                    "<input type='submit'>" +
-                    "</form>";
-        } else {
-            //Affichage de la zone de saisie & le bouton de validation.
-            taskhtml += "<form action='/hello-world' " +
-                    "method='POST'>Add Task: <input type='text' name='taskTitle'>" +
-                    "<br />Add Date Task : <input type='date' name='date'> " +
-                    "<input type='submit'>" +
-                    "</form>";
         }
+        taskhtml += "</SELECT>" +
+                "<input type='submit'>" +
+                "</form>";
+
         return taskhtml;
     }
 
@@ -113,15 +107,13 @@ public class HelloWorldResource {
     //**********************************************************************************
     @POST
     public Response CreateTask(@FormParam("taskTitle") String taskTitle, @FormParam("date") String date, @FormParam("Parents") String Parents) {
+
         if (CompareDate(date, Parents)) {
             HelloWorldTask Tache = new HelloWorldTask();
             Tache.Nom = taskTitle;
             Tache.Date = date;
             Tache.TachePere = NameToIntFather(Parents);
-            if (Parents == null) {
-                Parents = "Aucun";
-            }
-            if (Parents != "Aucun") {
+            if (!Parents.equals("Aucun")) {
                 // Elle a besoin d'un pere
                 int id_Parents = NameToIntFather(Parents);
                 Tache.TachePere = id_Parents;
@@ -138,7 +130,6 @@ public class HelloWorldResource {
             URI redirect = UriBuilder.fromUri("/hello-world").build();
             return Response.seeOther(redirect).build();
         }
-
     }
 
     //**********************************************************************************
@@ -168,24 +159,31 @@ public class HelloWorldResource {
     public boolean CompareDate(String date, String parents) {
 
         //Récupération date père
-        int idPere = NameToIntFather(parents);
-        String datePere = Taches.elementAt(idPere).Date;
+        String datePere = "";
+        if (!parents.equals("Aucun"))
+        {
+            int idPere = NameToIntFather(parents);
+            datePere = Taches.elementAt(idPere).Date;
 
-        //Récupération date fils
-        String dateFils = date;
+            //Récupération date fils
+            String dateFils = date;
 
-        //Conversion
-        Date dateP = ComversionDate(datePere);
-        Date dateF = ComversionDate(dateFils);
+            //Conversion
+            Date dateP = ComversionDate(datePere);
+            Date dateF = ComversionDate(dateFils);
 
-        //Comparaison
-        if (dateP.compareTo(dateF) == 0) {
+            //Comparaison
+            if (dateP.compareTo(dateF) == 0) {
+                return true;
+            } else if (dateP.compareTo(dateF) < 0) {
+                return true;
+            } else {
+                return false;
+            }
+        } else{
             return true;
-        } else if (dateP.compareTo(dateF) < 0) {
-            return true;
-        } else {
-            return false;
         }
+
 
     }
 
