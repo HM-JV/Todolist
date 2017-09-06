@@ -19,6 +19,7 @@ public class TaskTest {
         assertEquals("22-07-2018", toCheck.dateFin);
     }
 
+    @Test
     public void daughterShouldBeBeforeMotherDate(){
         TaskManager manager = new TaskManager();
         HelloWorldTask mother = new HelloWorldTask();
@@ -57,6 +58,9 @@ public class TaskTest {
 
         manager.addTask(daughter, "mother");
         assertEquals(2, manager.allTask().size());
-        assertEquals("daughter1", manager.allTask().get(1).nom);
+        assertEquals("daughter1", manager.allTask().get(1).Nom);
+
+        manager.addTask(daughterWrong, "mother");
+        assertEquals( 2, manager.allTask().size());
     }
 }
