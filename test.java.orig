@@ -1,7 +1,0 @@
-Test de l'application Merge:
-Test 1 de modification du fichier
-<<<<<<< HEAD
-Test 2 moficiation depuis la branche
-=======
-Test 2 de modification du fichier
->>>>>>> 724f3b3ecbd90e0f58307358dfee9e63e41b3854
