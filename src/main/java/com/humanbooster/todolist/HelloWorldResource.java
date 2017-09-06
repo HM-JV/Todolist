@@ -4,10 +4,14 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.net.URI;
 import java.util.List;
 import java.util.Vector;
+import java.util.Date;
+
 
 @Path("/hello-world")
 @Produces(MediaType.TEXT_HTML)
@@ -87,14 +91,21 @@ public class HelloWorldResource {
     // Création d'une tache
     @POST
     public Response CreateTask(@FormParam("taskTitle") String taskTitle, @FormParam("date") String date, @FormParam("Parents") String Parents) {
-        HelloWorldTask Tache = new HelloWorldTask();
-        Tache.Nom = taskTitle;
-        Tache.Date = date;
-        Tache.TachePere = NameToIntFather(Parents);
-        Taches.add(Tache);
-        URI redirect = UriBuilder.fromUri("/hello-world").build();
-        return Response.seeOther(redirect).build();
-        //return "Task "+ taskTitle +" created";
+        if (CompareDate(date, Parents)){
+            HelloWorldTask Tache = new HelloWorldTask();
+            Tache.Nom = taskTitle;
+            Tache.Date = date;
+            Tache.TachePere = NameToIntFather(Parents);
+            Taches.add(Tache);
+            URI redirect = UriBuilder.fromUri("/hello-world").build();
+            return Response.seeOther(redirect).build();
+            //return "Task "+ taskTitle +" created";
+        }
+        else {
+            URI redirect = UriBuilder.fromUri("/hello-world").build();
+            return Response.seeOther(redirect).build();
+        }
+
     }
 
     public int NameToIntFather (String Parents){
@@ -118,5 +129,44 @@ public class HelloWorldResource {
                 FatherIs.add(Taches.elementAt(i).Nom);
             }
         }
+    }
+
+    public boolean CompareDate (String date, String parents) {
+
+        //Récupération date père
+        int idPere = NameToIntFather(parents);
+        String datePere = Taches.elementAt(idPere).Date;
+
+        //Récupération date fils
+        String dateFils = date;
+
+        //Conversion
+        Date dateP = ComversionDate(datePere);
+        Date dateF = ComversionDate(dateFils);
+
+        //Comparaison
+        if (dateP.compareTo(dateF) == 0) {
+            return true;
+        }
+        else if (dateP.compareTo(dateF) < 0) {
+            return true;
+        }
+        else {
+            return false;
+        }
+
+    }
+
+    public Date ComversionDate (String Date) {
+        //Conversion de la date
+        SimpleDateFormat formatter = new SimpleDateFormat("dd-MMM-yyyy");
+        try {
+            Date date = formatter.parse(Date);
+            return date;
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return null;
+        }
+
     }
 }
