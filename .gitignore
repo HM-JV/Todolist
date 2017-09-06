@@ -83,6 +83,8 @@ $RECYCLE.BIN/
 # Windows shortcuts
 *.lnk
 
+*.iml
 .idea/*
-.target/*
+target/*
+.DS_Store
 # End of https://www.gitignore.io/api/windows,intelli
