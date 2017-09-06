@@ -14,28 +14,34 @@ import java.util.Vector;
 public class HelloWorldResource {
 
     //**********************************************************************************
-    // Fonction: Permet l'affichage de la page WEB. Contenant les boutons et la zone de saisie
+    // Zone de déclaration des variables de la classe
     //**********************************************************************************
     //private List<String> tasks = new ArrayList<String>();
     private Vector<HelloWorldTask> Taches = new Vector<HelloWorldTask>();
     private List<String> FatherIs = new ArrayList<String>();
 
+    //**********************************************************************************
+    // Parametre Fonction : Aucun
+    // Description        : Affiche le contenu de la page lors du lancement de la page principale
+    //**********************************************************************************
     @GET //Définition de la méthode d'accès a la page
     public String sayHello() {
         String taskhtml = "";
+        //Zone de listage des différents taches déja mémoriser dans le Vector
         for (int i = 0; i < Taches.size(); i++) {
             taskhtml += "<div>" +
                     "<a href='/hello-world/consulter/"+i+"'>" + Taches.elementAt(i).Nom + "</a>" +
                     "<a href='/hello-world/delete/" + i + "'>X</a>" +
                     "</div>";
         }
-        //Gestion de l'enregistrement 0
+        //Gestion de l'enregistrement 0 afin d'afficher ou non le menu déroulant.
         if(Taches.size() > 0){
             taskhtml +="<form action='/hello-world' " +
                     "method='POST'>Add Task: <input type='text' name='taskTitle'>" +
                     "<br />Add Date Task : <input type='date' name='date'> " +
                     "<br />Task Father :"+
-                    "<SELECT name='Parents' size='1'>\n";
+                    "<SELECT name='Parents' size='1'>\n"+
+                    "<OPTION> Aucun";
                     for (int i = 0; i < Taches.size(); i++) {
                         taskhtml += "<OPTION>" +Taches.elementAt(i).Nom ;
                     }
@@ -44,6 +50,7 @@ public class HelloWorldResource {
                     "</form>";
         }
         else{
+            //Affichage de la zone de saisie & le bouton de validation.
              taskhtml +="<form action='/hello-world' " +
                     "method='POST'>Add Task: <input type='text' name='taskTitle'>" +
                     "<br />Add Date Task : <input type='date' name='date'> " +
@@ -53,50 +60,85 @@ public class HelloWorldResource {
         return taskhtml;
     }
 
-    // Gestion de la suppression d'élément des tâches mémoriser.
+    //**********************************************************************************
+    // Parametre Fonction : Id de la tâche
+    // Description        : Lance une page delete permettant la suppression d'un tache.
+    //                    : avec la gestion de suppression des enfants en cas de suppresion du père
+    //**********************************************************************************
     @GET
     @Path("/delete/{id}")
     public Response delete(@PathParam("id") int id) {
-        IsFather(id);
-        if(!FatherIs.isEmpty()){
-            for (int i=0; i < FatherIs.size(); i++ ){
-                Taches.remove(NameToIntFather(FatherIs.get(i)));
+        //Verification si le tableau des enfants est remplie
+        if (Taches.elementAt(id).TacheEnfants.isEmpty()){
+            //Si elle est vide on retire uniquement le tache
+            Taches.remove(id);
+        } else {
+            //Si elle n'est pas vide suppression des enfants puis du père
+            for(int i=0; i<Taches.elementAt(id).TacheEnfants.size();i++){
+                Taches.remove(Taches.elementAt(id).TacheEnfants.get(i));
             }
             Taches.remove(id);
-        }else {
-            Taches.remove(id);
         }
-
         URI redirect = UriBuilder.fromUri("/hello-world").build();
         return Response.seeOther(redirect).build();
     }
 
     //**********************************************************************************
-    // Fonction d'affichage de contenu de tache
+    // Parametre Fonction : Id de la Tache
+    // Description        : Affiche le détails de la tache passer en paramètre
     //**********************************************************************************
     @GET
     @Path("/consulter/{id}")
     public String consulter(@PathParam("id") int id) {
         String taskhtml = "Task information " +
                 "<br /> Name : " + Taches.elementAt(id).Nom +
-                "<br /> Date : " + Taches.elementAt(id).Date +
-                "<br /> Tache Principale : " + IntToNameFather(Taches.elementAt(id).TachePere);
+                "<br /> Date : " + Taches.elementAt(id).Date;
+                if ( Taches.elementAt(id).TachePere != -1){
+                    taskhtml += "<br /> Tache Principale : " + IntToNameFather(Taches.elementAt(id).TachePere);
+                }
+                if (!Taches.elementAt(id).TacheEnfants.isEmpty()){
+                    for(int i=0; i<Taches.elementAt(id).TacheEnfants.size();i++){
+                        taskhtml += "<br /> Taches Secondaire : "+ IntToNameFather(Taches.elementAt(id).TacheEnfants.get(i));
+                    }
+                }
         return taskhtml;
     }
 
-    // Création d'une tache
+    //**********************************************************************************
+    // Parametre Fonction : taskTitle , date, Parents récupere du formulaire de saisi de l'utilisateur
+    // Description        : Permet d'enregistre les informations dans un objet de Tache
+    //**********************************************************************************
     @POST
     public Response CreateTask(@FormParam("taskTitle") String taskTitle, @FormParam("date") String date, @FormParam("Parents") String Parents) {
+        // Verification de date avec IF
+        // if (CompareDate (date , NameToIntFather(Parents))
+        // {
         HelloWorldTask Tache = new HelloWorldTask();
         Tache.Nom = taskTitle;
         Tache.Date = date;
-        Tache.TachePere = NameToIntFather(Parents);
+        // Test afin de verifier que la nouvelle tache a un besoin d'un pere ou non
+        if (Parents == null){
+            Parents = "Aucun";
+        }
+        if (Parents != "Aucun" ) {
+            // Elle a besoin d'un pere
+            int id_Parents = NameToIntFather(Parents);
+            Tache.TachePere = id_Parents;
+            //Ajout dans le tableau du pere afin d'identifier le nouveau enfant.
+            Taches.elementAt(id_Parents).TacheEnfants.add(Taches.size());
+        } else{
+            Tache.TachePere = -1;
+        }
         Taches.add(Tache);
         URI redirect = UriBuilder.fromUri("/hello-world").build();
         return Response.seeOther(redirect).build();
         //return "Task "+ taskTitle +" created";
     }
 
+    //**********************************************************************************
+    // Parametre Fonction : Parents contient le nom de la tache pere
+    // Description        : Recherche de l'id en fonction du nom du père
+    //**********************************************************************************
     public int NameToIntFather (String Parents){
         int id_Parents = 0;
         for (int i = 0; i < Taches.size(); i++) {
@@ -107,16 +149,12 @@ public class HelloWorldResource {
         }
         return id_Parents;
     }
-
+    //**********************************************************************************
+    // Parametre Fonction : id_Parents
+    // Description        : Recherche le nom en fonction de l'id du père
+    //**********************************************************************************
     public String IntToNameFather (int id_Parents){
         return Taches.elementAt(id_Parents).Nom;
     }
-
-    public void IsFather(int Id_Father){ ;
-        for (int i = 0; i < Taches.size(); i++) {
-            if (Id_Father == Taches.elementAt(i).TachePere){
-                FatherIs.add(Taches.elementAt(i).Nom);
-            }
-        }
-    }
+    
 }
