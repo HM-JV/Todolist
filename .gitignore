@@ -84,4 +84,5 @@ $RECYCLE.BIN/
 *.lnk
 
 .idea/*
+.target/*
 # End of https://www.gitignore.io/api/windows,intelli
