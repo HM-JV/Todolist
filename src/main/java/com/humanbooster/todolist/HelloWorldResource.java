@@ -23,20 +23,21 @@ public class HelloWorldResource {
         //Zone de listage des différents taches déja mémoriser dans le Vector
         for (int i = 0; i < manager.allTask().size(); i++) {
             taskhtml += "<div>" +
-                    "<a href='/hello-world/consulter/" + i + "'>" + manager.allTask().elementAt(i).Nom + "</a>" +
+                    "<a href='/hello-world/consulter/" + i + "'>" + manager.allTask().get(i).nom + "</a>" +
                     "<a href='/hello-world/delete/" + i + "'>X</a>" +
                     "</div>";
         }
         //Gestion de l'enregistrement 0 afin d'afficher ou non le menu déroulant.
         taskhtml += "<form action='/hello-world' " +
                 "method='POST'>Add Task: <input type='text' name='taskTitle'>" +
-                "<br />Add Date Task : <input type='date' name='date'> " +
+                "<br />Add Start Date Task : <input type='date' name='dateDebut'> " +
+                "<br />Add End Date Task : <input type='date' name='dateFin'> " +
                 "<br />Task Father :" +
                 "<SELECT name='Parents' size='1'>\n" +
                 "<OPTION> Aucun";
         if (manager.allTask().size() > 0) {
             for (int i = 0; i < manager.allTask().size(); i++) {
-                taskhtml += "<OPTION>" + manager.allTask().elementAt(i).Nom;
+                taskhtml += "<OPTION>" + manager.allTask().get(i).nom;
             }
         }
         taskhtml += "</SELECT>" +
@@ -54,10 +55,7 @@ public class HelloWorldResource {
     @GET
     @Path("/delete/{id}")
     public Response delete(@PathParam("id") int id) {
-
         manager.removeTask(id);
-
-
         URI redirect = UriBuilder.fromUri("/hello-world").build();
         return Response.seeOther(redirect).build();
     }
@@ -70,14 +68,15 @@ public class HelloWorldResource {
     @Path("/consulter/{id}")
     public String consulter(@PathParam("id") int id) {
         String taskhtml = "Task information " +
-                "<br /> Name : " + manager.allTask().elementAt(id).Nom +
-                "<br /> Date : " + manager.allTask().elementAt(id).Date;
-        if (manager.allTask().elementAt(id).TachePere != -1) {
-            taskhtml += "<br /> Tache Principale : " + manager.intToNameFather(manager.allTask().elementAt(id).TachePere);
+                "<br /> Name : " + manager.allTask().get(id).nom +
+                "<br /> Begin Date : " + manager.allTask().get(id).dateDebut +
+                "<br /> End Date : " + manager.allTask().get(id).dateFin;
+        if (manager.allTask().get(id).tachePere != -1) {
+            taskhtml += "<br /> Tache Principale : " + manager.intToNameFather(manager.allTask().get(id).tachePere);
         }
-        if (!manager.allTask().elementAt(id).tacheEnfants.isEmpty()) {
-            for (int i = 0; i < manager.allTask().elementAt(id).tacheEnfants.size(); i++) {
-                taskhtml += "<br /> Taches Secondaire : " + manager.intToNameFather(manager.allTask().elementAt(id).tacheEnfants.get(i));
+        if (!manager.allTask().get(id).tacheEnfants.isEmpty()) {
+            for (int i = 0; i < manager.allTask().get(id).tacheEnfants.size(); i++) {
+                taskhtml += "<br /> Taches Secondaire : " + manager.intToNameFather(manager.allTask().get(id).tacheEnfants.get(i));
             }
         }
         return taskhtml;
@@ -88,20 +87,15 @@ public class HelloWorldResource {
     // Description        : Permet d'enregistre les informations dans un objet de Tache
     //**********************************************************************************
     @POST
-    public Response CreateTask(@FormParam("taskTitle") String taskTitle, @FormParam("date") String date, @FormParam("Parents") String Parents) {
+    public Response createTask(@FormParam("taskTitle") String taskTitle, @FormParam("dateDebut") String dateDebut, @FormParam("dateFin") String dateFin, @FormParam("Parents") String Parents) {
 
         HelloWorldTask Tache = new HelloWorldTask();
-        Tache.Nom = taskTitle;
-        Tache.Date = date;
-        Tache.TachePere = manager.nameToIntFather(Parents);
+        Tache.nom = taskTitle;
+        Tache.dateDebut = dateDebut;
+        Tache.dateFin = dateFin;
+        Tache.tachePere = manager.nameToIntFather(Parents);
         manager.addTask(Tache, Parents);
         URI redirect = UriBuilder.fromUri("/hello-world").build();
         return Response.seeOther(redirect).build();
     }
-
-
-
-
-
-
 }

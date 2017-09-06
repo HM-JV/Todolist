@@ -11,19 +11,19 @@ public class TaskTest {
     public void canCreateTask(){
         TaskManager manager = new TaskManager();
         HelloWorldTask task = new HelloWorldTask();
-        task.Nom = "mother";
-        task.Date = "22-07-2018";
+        task.nom = "mother";
+        task.dateFin = "22-07-2018";
         manager.addTask(task, "Aucun");
         HelloWorldTask toCheck = manager.allTask().get(0);
-        assertEquals("mother", toCheck.Nom);
-        assertEquals("22-07-2018", toCheck.Date);
+        assertEquals("mother", toCheck.nom);
+        assertEquals("22-07-2018", toCheck.dateFin);
     }
 
     public void daughterShouldBeBeforeMotherDate(){
         TaskManager manager = new TaskManager();
         HelloWorldTask mother = new HelloWorldTask();
-        mother.Nom = "mother";
-        mother.Date = "22-07-2018";
+        mother.nom = "mother";
+        mother.dateFin = "22-07-2018";
         manager.addTask(mother, "Aucun");
 
         boolean toLateCantCreate = manager.compareDate("31-12-2020", "mother");
@@ -40,23 +40,23 @@ public class TaskTest {
     public void canAddDaughter(){
         TaskManager manager = new TaskManager();
         HelloWorldTask mother = new HelloWorldTask();
-        mother.Nom = "mother";
-        mother.Date = "22-07-2018";
+        mother.nom = "mother";
+        mother.dateFin = "22-07-2018";
         manager.addTask(mother, "Aucun");
 
 
         HelloWorldTask daughter = new HelloWorldTask();
-        daughter.Nom = "daughter1";
-        daughter.Date = "01-01-2017";
-        daughter.TachePere = 0;
+        daughter.nom = "daughter1";
+        daughter.dateFin = "01-01-2017";
+        daughter.tachePere = 0;
 
         HelloWorldTask daughterWrong = new HelloWorldTask();
-        daughterWrong.Nom = "daughter2";
-        daughterWrong.Date = "01-01-2030";
-        daughterWrong.TachePere = 0;
+        daughterWrong.nom = "daughter2";
+        daughterWrong.dateFin = "01-01-2030";
+        daughterWrong.tachePere = 0;
 
         manager.addTask(daughter, "mother");
         assertEquals(2, manager.allTask().size());
-        assertEquals("daughter1", manager.allTask().get(1).Nom);
+        assertEquals("daughter1", manager.allTask().get(1).nom);
     }
 }

@@ -16,22 +16,25 @@ public class TaskManager {
     // Zone de déclaration des variables de la classe
     //**********************************************************************************
     //private List<String> tasks = new ArrayList<String>();
-    private Vector<HelloWorldTask> taches = new Vector<HelloWorldTask>();
-    private List<String> FatherIs = new ArrayList<String>();
+    //private Vector<HelloWorldTask> taches = new Vector<HelloWorldTask>();
+    private List<HelloWorldTask> taches = new ArrayList<HelloWorldTask>();
 
-    public Vector<HelloWorldTask> allTask(){
+    //**********************************************************************************
+    // Retourne l'ensemble des taches
+    //**********************************************************************************
+    public List<HelloWorldTask> allTask(){
         return taches;
     }
 
     public void removeTask(int id){
         //Verification si le tableau des enfants est remplie
-        if (allTask().elementAt(id).tacheEnfants.isEmpty()) {
+        if (allTask().get(id).tacheEnfants.isEmpty()) {
             //Si elle est vide on retire uniquement le tache
             removeTask(id);
         } else {
             //Si elle n'est pas vide suppression des enfants puis du père
-            for (int i = 0; i < allTask().elementAt(id).tacheEnfants.size(); i++) {
-                allTask().remove(allTask().elementAt(id).tacheEnfants.get(i));
+            for (int i = 0; i < allTask().get(id).tacheEnfants.size(); i++) {
+                allTask().remove(allTask().get(id).tacheEnfants.get(i));
             }
             allTask().remove(id);
         }
@@ -40,16 +43,16 @@ public class TaskManager {
     }
 
     // date should be before parents date
-    public boolean compareDate(String date, String parents) {
+    public boolean compareDate(String dateFin, String parents) {
 
         //Récupération date père
         String datePere = "";
         if (!parents.equals("Aucun")) {
             int idPere = nameToIntFather(parents);
-            datePere = taches.elementAt(idPere).Date;
+            datePere = taches.get(idPere).dateFin;
 
             //Récupération date fils
-            String dateFils = date;
+            String dateFils = dateFin;
 
             //Conversion
             Date dateP = comversionDate(datePere);
@@ -58,7 +61,7 @@ public class TaskManager {
             //Comparaison
             if (dateP.compareTo(dateF) == 0) {
                 return true;
-            } else if (dateP.compareTo(dateF) < 0) {
+            } else if (dateP.compareTo(dateF) > 0) {
                 return true;
             } else {
                 return false;
@@ -66,8 +69,6 @@ public class TaskManager {
         } else{
             return true;
         }
-
-
     }
 
     public Date comversionDate(String Date) {
@@ -90,7 +91,7 @@ public class TaskManager {
     public int nameToIntFather(String Parents) {
         int id_Parents = 0;
         for (int i = 0; i < taches.size(); i++) {
-            if (Parents == taches.elementAt(i).Nom) {
+            if (Parents == taches.get(i).nom) {
                 id_Parents = i;
                 i = taches.size();
             }
@@ -103,19 +104,19 @@ public class TaskManager {
     // Description        : Recherche le nom en fonction de l'id du père
     //**********************************************************************************
     public String intToNameFather(int id_Parents) {
-        return taches.elementAt(id_Parents).Nom;
+        return taches.get(id_Parents).nom;
     }
 
     public void addTask(HelloWorldTask tache, String parents) {
-        if (compareDate(tache.Date, parents)) {
+        if (compareDate(tache.dateFin, parents)) {
             if (!parents.equals("Aucun")) {
                 // Elle a besoin d'un pere
                 int idParents = nameToIntFather(parents);
-                tache.TachePere = idParents;
+                tache.tachePere = idParents;
                 //Ajout dans le tableau du pere afin d'identifier le nouveau enfant.
-                taches.elementAt(idParents).tacheEnfants.add(taches.size());
+                taches.get(idParents).tacheEnfants.add(taches.size());
             } else {
-                tache.TachePere = -1;
+                tache.tachePere = -1;
             }
             taches.add(tache);
         }
