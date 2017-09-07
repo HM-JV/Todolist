@@ -6,7 +6,6 @@ import static org.junit.Assert.assertEquals;
 
 public class TaskTest {
 
-
     @Test
     public void canCreateTask(){
         TaskManager manager = new TaskManager();
@@ -58,9 +57,60 @@ public class TaskTest {
 
         manager.addTask(daughter, "mother");
         assertEquals(2, manager.allTask().size());
-        assertEquals("daughter1", manager.allTask().get(1).Nom);
+        assertEquals("daughter1", manager.allTask().get(1).nom);
 
         manager.addTask(daughterWrong, "mother");
         assertEquals( 2, manager.allTask().size());
+    }
+
+
+    @Test
+    public void canDeleteTask(){
+        TaskManager manager = new TaskManager();
+        HelloWorldTask mother = new HelloWorldTask();
+        mother.nom = "mother";
+        mother.dateFin = "22-07-2018";
+        manager.addTask(mother, "Aucun");
+
+        manager.removeTask(0);
+        assertEquals(0, manager.allTask().size());
+    }
+
+    @Test
+    public void canDeleteDaughterAndMother(){
+        TaskManager manager = new TaskManager();
+        HelloWorldTask mother = new HelloWorldTask();
+        mother.nom = "mother";
+        mother.dateFin = "22-07-2018";
+        manager.addTask(mother, "Aucun");
+
+
+        HelloWorldTask daughter = new HelloWorldTask();
+        daughter.nom = "daughter1";
+        daughter.dateFin = "01-01-2017";
+        daughter.tachePere = 0;
+        manager.addTask(daughter, "mother");
+
+        manager.removeTask(0);
+        assertEquals(0, manager.allTask().size());
+    }
+
+    @Test
+    public void canDeleteOnlyDaughterAndNotMother(){
+        TaskManager manager = new TaskManager();
+        HelloWorldTask mother = new HelloWorldTask();
+        mother.nom = "mother";
+        mother.dateFin = "22-07-2018";
+        manager.addTask(mother, "Aucun");
+
+
+        HelloWorldTask daughter = new HelloWorldTask();
+        daughter.nom = "daughter1";
+        daughter.dateFin = "01-01-2017";
+        daughter.tachePere = 0;
+        manager.addTask(daughter, "mother");
+
+        manager.removeTask(1);
+        assertEquals(1, manager.allTask().size());
     }
 }

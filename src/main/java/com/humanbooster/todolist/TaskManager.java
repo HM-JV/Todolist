@@ -5,7 +5,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Vector;
 
 /**
  * Created by sochipan on 06/09/17.
@@ -13,36 +12,45 @@ import java.util.Vector;
 public class TaskManager {
 
     //**********************************************************************************
-    // Zone de déclaration des variables de la classe
+    //
+    // Description        : Declaration des variable de la classe TaskManager
     //**********************************************************************************
     //private List<String> tasks = new ArrayList<String>();
     //private Vector<HelloWorldTask> taches = new Vector<HelloWorldTask>();
     private List<HelloWorldTask> taches = new ArrayList<HelloWorldTask>();
 
     //**********************************************************************************
-    // Retourne l'ensemble des taches
+    // Parametre Fonction : Aucun
+    // Description        : Renvoie la liste complete des tâches enregistrer
     //**********************************************************************************
     public List<HelloWorldTask> allTask(){
         return taches;
     }
 
+    //**********************************************************************************
+    // Parametre Fonction : Id de la tache a supprimer
+    // Description        : Supprime une tache. Prend en compte la demande de supprimer les enfants en cas de
+    //                      suppression du Parents.
+    //**********************************************************************************
     public void removeTask(int id){
         //Verification si le tableau des enfants est remplie
         if (allTask().get(id).tacheEnfants.isEmpty()) {
             //Si elle est vide on retire uniquement le tache
-            removeTask(id);
+            taches.remove(id);
         } else {
             //Si elle n'est pas vide suppression des enfants puis du père
             for (int i = 0; i < allTask().get(id).tacheEnfants.size(); i++) {
                 allTask().remove(allTask().get(id).tacheEnfants.get(i));
             }
             allTask().remove(id);
+            taches.remove(id);
         }
-
-        taches.remove(id);
     }
 
-    // date should be before parents date
+    //**********************************************************************************
+    // Parametre Fonction : DateFin de l'enfant en cours de création, Parents nom du parents associé
+    // Description        : Va comparer la date de fin de l'enfant en cours et celle du parents associé (si il y en a un)
+    //**********************************************************************************
     public boolean compareDate(String dateFin, String parents) {
 
         //Récupération date père
@@ -55,8 +63,8 @@ public class TaskManager {
             String dateFils = dateFin;
 
             //Conversion
-            Date dateP = comversionDate(datePere);
-            Date dateF = comversionDate(dateFils);
+            Date dateP = conversionDate(datePere);
+            Date dateF = conversionDate(dateFils);
 
             //Comparaison
             if (dateP.compareTo(dateF) == 0) {
@@ -71,7 +79,11 @@ public class TaskManager {
         }
     }
 
-    public Date comversionDate(String Date) {
+    //**********************************************************************************
+    // Parametre Fonction : Date de type sting
+    // Description        : Convertir les dates de type string en format Date
+    //**********************************************************************************
+    public Date conversionDate(String Date) {
         //Conversion de la date
         SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
         try {
@@ -107,6 +119,10 @@ public class TaskManager {
         return taches.get(id_Parents).nom;
     }
 
+    //**********************************************************************************
+    // Parametre Fonction : Objet Tache fille, et Parents qui represente le nom de l'eventuelle TachePere
+    // Description        : Crée un nouvelle objet Task et assure la gestion de la présence ou non du pere.
+    //**********************************************************************************
     public void addTask(HelloWorldTask tache, String parents) {
         if (compareDate(tache.dateFin, parents)) {
             if (!parents.equals("Aucun")) {
