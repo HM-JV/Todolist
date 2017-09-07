@@ -47,10 +47,10 @@ public class TaskManager {
         }
     }
 
-    //**********************************************************************************
+    //******************************************************************************************************************
     // Parametre Fonction : DateFin de l'enfant en cours de création, Parents nom du parents associé
     // Description        : Va comparer la date de fin de l'enfant en cours et celle du parents associé (si il y en a un)
-    //**********************************************************************************
+    //*******************************************************************************************************************
     public boolean compareDate(String dateFin, String parents) {
 
         //Récupération date père

@@ -6,6 +6,10 @@ import static org.junit.Assert.assertEquals;
 
 public class TaskTest {
 
+
+    //**********************************************************************************
+    // Description        : Test la création du tache
+    //**********************************************************************************
     @Test
     public void canCreateTask(){
         TaskManager manager = new TaskManager();
@@ -18,6 +22,10 @@ public class TaskTest {
         assertEquals("22-07-2018", toCheck.dateFin);
     }
 
+
+    //**********************************************************************************
+    // Description        : Test la date de l'enfant soit avant celle du parent
+    //**********************************************************************************
     @Test
     public void daughterShouldBeBeforeMotherDate(){
         TaskManager manager = new TaskManager();
@@ -36,6 +44,11 @@ public class TaskTest {
         assertEquals(true, okWithSameDate);
     }
 
+
+
+    //**********************************************************************************
+    // Description        : Test la création d'un enfant
+    //**********************************************************************************
     @Test
     public void canAddDaughter(){
         TaskManager manager = new TaskManager();
@@ -64,6 +77,9 @@ public class TaskTest {
     }
 
 
+    //**********************************************************************************
+    // Description        : Test la suppression du tache
+    //**********************************************************************************
     @Test
     public void canDeleteTask(){
         TaskManager manager = new TaskManager();
@@ -76,6 +92,10 @@ public class TaskTest {
         assertEquals(0, manager.allTask().size());
     }
 
+
+    //**********************************************************************************
+    // Description        : Test la suppression du tache enfant ainsi que la parente
+    //**********************************************************************************
     @Test
     public void canDeleteDaughterAndMother(){
         TaskManager manager = new TaskManager();
@@ -95,6 +115,10 @@ public class TaskTest {
         assertEquals(0, manager.allTask().size());
     }
 
+
+    //**********************************************************************************
+    // Description        : Test la suppression de seulement la tache enfant
+    //**********************************************************************************
     @Test
     public void canDeleteOnlyDaughterAndNotMother(){
         TaskManager manager = new TaskManager();
