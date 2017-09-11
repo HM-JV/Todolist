@@ -22,18 +22,18 @@ public class HelloWorldResource {
         String taskhtml = "";
         //Zone de listage des différents taches déja mémoriser dans le Vector
         for (int i = 0; i < manager.allTask().size(); i++) {
-            taskhtml += "<div>" +
+            taskhtml += "<div id='task_" + i + "'>" +
                     "<a href='/hello-world/consulter/" + i + "'>" + manager.allTask().get(i).nom + "</a>" +
                     "<a href='/hello-world/delete/" + i + "'>X</a>" +
                     "</div>";
         }
         //Gestion de l'enregistrement 0 afin d'afficher ou non le menu déroulant.
         taskhtml += "<form action='/hello-world' " +
-                "method='POST'>Add Task: <input type='text' name='taskTitle'>" +
-                "<br />Add Start Date Task : <input type='date' name='dateDebut'> " +
-                "<br />Add End Date Task : <input type='date' name='dateFin'> " +
+                "method='POST'>Add Task: <input type='text' id ='taskTitle' name='taskTitle'>" +
+                "<br />Add Start Date Task : <input type='date' id='dateDebut' name='dateDebut'> " +
+                "<br />Add End Date Task : <input type='date' id='dateFin' name='dateFin'> " +
                 "<br />Task Father :" +
-                "<SELECT name='Parents' size='1'>\n" +
+                "<SELECT id='BTN_Submit' name='Parents' size='1'>\n" +
                 "<OPTION> Aucun";
         if (manager.allTask().size() > 0) {
             for (int i = 0; i < manager.allTask().size(); i++) {
