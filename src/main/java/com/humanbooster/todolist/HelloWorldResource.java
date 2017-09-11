@@ -23,7 +23,7 @@ public class HelloWorldResource {
         //Zone de listage des différents taches déja mémoriser dans le Vector
         for (int i = 0; i < manager.allTask().size(); i++) {
             taskhtml += "<div id='task_" + i + "'>" +
-                    "<a href='/hello-world/consulter/" + i + "'>" + manager.allTask().get(i).nom + "</a>" +
+                    "<a href='/hello-world/consulter/'>" + manager.allTask().get(i).nom + "</a>" +
                     "<a href='/hello-world/delete/" + i + "'>X</a>" +
                     "</div>";
         }
@@ -33,7 +33,7 @@ public class HelloWorldResource {
                 "<br />Add Start Date Task : <input type='date' id='dateDebut' name='dateDebut'> " +
                 "<br />Add End Date Task : <input type='date' id='dateFin' name='dateFin'> " +
                 "<br />Task Father :" +
-                "<SELECT id='BTN_Submit' name='Parents' size='1'>\n" +
+                "<SELECT name='Parents' size='1'>\n" +
                 "<OPTION> Aucun";
         if (manager.allTask().size() > 0) {
             for (int i = 0; i < manager.allTask().size(); i++) {
@@ -41,7 +41,7 @@ public class HelloWorldResource {
             }
         }
         taskhtml += "</SELECT>" +
-                "<input type='submit'>" +
+                "<input type='submit'  id='button'>" +
                 "</form>"+
                 "<div> Test de reup de code. </div>";
         return taskhtml;
