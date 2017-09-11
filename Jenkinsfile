@@ -19,17 +19,17 @@ node {
         stage('Staging') {
             echo 'Deploy Stage'
         }
-		
-		stage('release') {
-			sh 'docker build -t todolist .'
-			sh 'docker rm -f todolist | true'
-			sh 'doscker run -do --name todolist -p 80:8080 /todolist/'
-		}
 
         stage('Deploy') {
             echo 'Deploy - Backend'
             echo 'Deploy - Frontend'
         }
+		
+		stage('release') {
+			sh 'docker build -t todolist .'
+			sh 'docker rm -f todolist | true'
+			sh 'docker run -d --name todolist -p 80:8080 todolist'
+		}
 
   } catch (e) {
     // If there was an exception thrown, the build failed
