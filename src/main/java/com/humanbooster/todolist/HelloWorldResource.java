@@ -22,7 +22,7 @@ public class HelloWorldResource {
         String taskhtml = "";
         //Zone de listage des différents taches déja mémoriser dans le Vector
         for (int i = 0; i < manager.allTask().size(); i++) {
-            taskhtml += "<BODY bgcolor=\"Blue\"><div>" +
+            taskhtml += "<div>" +
                     "<a href='/hello-world/consulter/" + i + "'>" + manager.allTask().get(i).nom + "</a>" +
                     "<a href='/hello-world/delete/" + i + "'>X</a>" +
                     "</div>";
@@ -42,7 +42,8 @@ public class HelloWorldResource {
         }
         taskhtml += "</SELECT>" +
                 "<input type='submit'>" +
-                "</form></BODY>";
+                "</form>"+
+                "<div> Test de reup de code. </div>";
         return taskhtml;
     }
 
