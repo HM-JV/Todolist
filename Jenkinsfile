@@ -14,15 +14,12 @@ node {
         stage('Testing') {
             echo 'Testing'
             echo 'Testing - publish coverage results'
+			sh 'mvn test'
         }
 
         stage('Staging') {
             echo 'Deploy Stage'
-        }
-
-        stage('Deploy') {
-            echo 'Deploy - Backend'
-            echo 'Deploy - Frontend'
+			sh 'mvn package -DskipTests'
         }
 		
 		stage('release') {
