@@ -22,12 +22,12 @@ public class TaskFonctionnelleTest {
             if (nameSystem.contains("Windows")){
                 //chromeOptions.setBinary("C:/Program Files (x86)/Google/Chrome/Application/chrome.exe");
                 chromeOptions.addArguments("--headless");
-                System.setProperty("webdriver.chrome.driver","Lib/chromedriver-win.exe");
+                //System.setProperty("webdriver.chrome.driver","Lib/chromedriver-win.exe");
 
             }else {
                 //chromeOptions.setBinary("/Applications/Google Chrome Canary.app/Contents/Google Chrome Canary");
                 chromeOptions.addArguments("--headless");
-                System.setProperty("webdriver.chrome.driver","Lib/chromedriver-linux");
+                //System.setProperty("webdriver.chrome.driver","Lib/chromedriver-linux");
             }
 
             WebDriver driver = new ChromeDriver(chromeOptions);
