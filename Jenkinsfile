@@ -1,5 +1,4 @@
 node {
-    def app
     try {
         notifyBuild('STARTED')
 
@@ -32,7 +31,7 @@ node {
             sh 'docker rm -f todolist | true'
         }
         stage('deploy(test serveur)') {
-        	sh 'app = docker build -t todolist .'
+        	sh 'docker build -t todolist .'
         	sh 'docker rm -f todolist | true'
         	sh 'docker run -d --name todolist -p 80:8080 todolist'
         }
