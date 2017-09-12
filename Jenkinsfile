@@ -21,7 +21,7 @@ node {
 		}
         stage('Testing') {
             sh 'chmod 755 Lib/chromedriver-linux'
-            mvn -Dtest=TaskFonctionnelleTest test
+            sh 'mvn -Dtest=TaskFonctionnelleTest test'
         }
         stage('Staging') {
             echo 'Deploy Stage'
