@@ -1,6 +1,5 @@
 //package com.humanbooster.todolist;
 
-//import org.junit.Test;
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -20,9 +19,9 @@ public class TaskFonctionnelleTest {
         ChromeOptions chromeOptions = new ChromeOptions();
             //comment the above 2 lines and uncomment below 2 lines to use Chrome
             if (nameSystem.contains("Windows")){
-                //chromeOptions.setBinary("C:/Program Files (x86)/Google/Chrome/Application/chrome.exe");
+                //chromeOptions.setBinary("C:\\Program Files (x86)\\Google\\Chrome\\Application");
                 chromeOptions.addArguments("--headless");
-                //System.setProperty("webdriver.chrome.driver","Lib/chromedriver-win.exe");
+                System.setProperty("webdriver.chrome.driver","Lib/chromedriver-win.exe");
 
             }else {
                 chromeOptions.setBinary("/usr/bin/google-chrome");

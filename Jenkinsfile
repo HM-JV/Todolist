@@ -6,27 +6,27 @@ node {
         	git "https://github.com/HM-JV/Todolist.git"
         	sh 'echo "do stuff before build"'
     	}
-
         stage('Prepare code') {
             echo 'do checkout stuff'
         }
-
-        stage('Testing') {
+        stage('UnitTest'){
             echo 'Testing'
             echo 'Testing - publish coverage results'
 			sh 'mvn test'
         }
-
-        stage('Staging') {
-            echo 'Deploy Stage'
-			sh 'mvn package -DskipTests'
-        }
-		
-		stage('release') {
+        stage('release') {7
 			sh 'docker build -t todolist .'
 			sh 'docker rm -f todolist | true'
 			sh 'docker run -d --name todolist -p 80:8080 todolist'
 		}
+        stage('Testing') {
+            sh 'chmod 755 Lib/chromedriver-linux'
+            mvn -Dtest=TaskFonctionnelleTest test
+        }
+        stage('Staging') {
+            echo 'Deploy Stage'
+			sh 'mvn package -DskipTests'
+        }
 
   } catch (e) {
     // If there was an exception thrown, the build failed
