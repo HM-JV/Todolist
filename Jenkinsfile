@@ -1,4 +1,5 @@
 node {
+    def app
     try {
         notifyBuild('STARTED')
 
@@ -31,14 +32,17 @@ node {
             sh 'docker rm -f todolist | true'
         }
         stage('deploy(test serveur)') {
-        	sh 'docker build -t todolist .'
+        	sh 'app = docker build -t todolist .'
         	sh 'docker rm -f todolist | true'
         	sh 'docker run -d --name todolist -p 80:8080 todolist'
         }
         stage('deploy(Production)'){
         //Envoie du projet .jar dans Docker.HUB
             sh 'docker push hbjv/todolist'
-            sh 'docker -H=165.227.133.134:2375 docker.withRegistry('https://hub.docker.com/r/hbjv', 'docker-hub-credentials')'
+            sh 'docker -H=165.227.133.134:2375 docker.withRegistry('https://hub.docker.com/r/hbjv', 'docker-hub-credentials') {
+                                              app.push("${env.BUILD_NUMBER}")
+                                              app.push("latest")
+            }'
             sh 'docker -H=165.227.133.134:2375 rm -f dockerhbjv | true'
             sh 'docker -H=165.227.133.134:2375 pull hbjv/todolist'
             sh 'docker -H=165.227.133.134:2375 run -d --name dockerhbjv -p 8079:8080 hbjv/todolist'
