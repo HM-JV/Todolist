@@ -30,13 +30,11 @@ public class TaskFonctionnelleTest {
             }
 
             WebDriver driver = new ChromeDriver(chromeOptions);
-            String baseUrl = "http://46.101.232.136/hello-world";
+            String baseUrl = "http://localhost:8080/hello-world";
             // launch direct it to the Base URL
             driver.get(baseUrl);
             addTask(driver);
-            Thread.sleep(2000);
             removeTask(driver);
-            Thread.sleep(2000);
             try{
                 driver.findElement(By.id("task_0"));
                 fail("Une erreur est la !!!!!");
