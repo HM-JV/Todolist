@@ -1,4 +1,5 @@
 node {
+    def app
     try {
         notifyBuild('STARTED')
 
@@ -21,11 +22,12 @@ node {
         	sh 'mvn package -DskipTests'
         }
         stage('release') {
-			sh 'docker build -t todolist .'
+			def app = docker.build("todolist")
 		}
         stage('Testing') {
             sh 'docker rm -f todolist | true'
-            sh 'docker run -d --name todolist -p 8080:8080 todolist'
+            def imgTest = docker.image('todolist'.run(""-p 8080:8080")
+            //sh 'docker run -d --name todolist -p 8080:8080 todolist'
             sh 'chmod 755 Lib/chromedriver-linux'
             sh 'mvn -Dtest=TaskFonctionnelleTest test'
             sh 'docker rm -f todolist | true'
@@ -33,7 +35,8 @@ node {
         stage('deploy(test serveur)') {
         	sh 'docker build -t todolist .'
         	sh 'docker rm -f todolist | true'
-        	sh 'docker run -d --name todolist -p 80:8080 todolist'
+        	def imgFonct = docker.image('todolist'.run(""-p 8080:8080")
+        	//sh 'docker run -d --name todolist -p 80:8080 todolist'
         }
         stage('deploy(Production)'){
         //Envoie du projet .jar dans Docker.HUB
