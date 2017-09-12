@@ -42,8 +42,7 @@ public class HelloWorldResource {
         }
         taskhtml += "</SELECT>" +
                 "<input type='submit'  id='button'>" +
-                "</form>"+
-                "<div> Test de reup de code. </div>";
+                "</form>";
         return taskhtml;
     }
 
