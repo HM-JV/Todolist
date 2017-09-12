@@ -25,7 +25,7 @@ public class TaskFonctionnelleTest {
                 //System.setProperty("webdriver.chrome.driver","Lib/chromedriver-win.exe");
 
             }else {
-                //chromeOptions.setBinary("/Applications/Google Chrome Canary.app/Contents/Google Chrome Canary");
+                chromeOptions.setBinary("/usr/bin/google-chrome");
                 chromeOptions.addArguments("--headless");
                 //System.setProperty("webdriver.chrome.driver","Lib/chromedriver-linux");
             }
