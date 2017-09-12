@@ -27,7 +27,7 @@ public class TaskFonctionnelleTest {
             }else {
                 chromeOptions.setBinary("/usr/bin/google-chrome");
                 chromeOptions.addArguments("--headless");
-                //System.setProperty("webdriver.chrome.driver","Lib/chromedriver-linux");
+                System.setProperty("webdriver.chrome.driver","Lib/chromedriver-linux");
             }
 
             WebDriver driver = new ChromeDriver(chromeOptions);
